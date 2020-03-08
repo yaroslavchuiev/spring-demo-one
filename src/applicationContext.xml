@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!--    load properties file-->
+    <context:property-placeholder location="classpath:sport.properties"/>
+
+    <util:list list-class="java.util.ArrayList" id="myPredictionList"  value-type="java.lang.String">
+        <value>${prediction.first}</value>
+        <value>${prediction.second}</value>
+        <value>${prediction.third}</value>
+    </util:list>
+
+    <bean id="myFortune" class="com.luv2code.springdemo.fortuneServices.HappyFortuneService">
+    </bean>
+
+    <bean id="myPropConfFortune" class="com.luv2code.springdemo.fortuneServices.BadFortuneService">
+        <property name="predictionList" ref="myPredictionList"/>
+    </bean>
+    <!-- Define your beans here -->
+    <bean id="myCoach" class="com.luv2code.springdemo.coaches.TrackCoach">
+        <!--        set up constructor injection-->
+        <constructor-arg ref="myFortune"/>
+    </bean>
+
+    <bean id="myCricketCoach" class="com.luv2code.springdemo.coaches.CricketCoach">
+        <!--        set up constructor injection-->
+        <property name="fortuneService" ref="myFortune"/>
+        <property name="emailAddress" value="someEmailAddress@gmail.com"/>
+        <property name="team" value="Sunrisers Hyderabad"/>
+    </bean>
+
+    <bean id="myCricketCoachConfiguredFromProps" class="com.luv2code.springdemo.coaches.CricketCoach">
+        <!--        set up constructor injection-->
+        <property name="fortuneService" ref="myFortune"/>
+        <property name="emailAddress" value="${foo.email}"/>
+        <property name="team" value="${foo.team}"/>
+    </bean>
+
+
+    <bean id="randomPredCoach" class="com.luv2code.springdemo.coaches.CricketCoach">
+        <!--        set up constructor injection-->
+        <property name="fortuneService" ref="myPropConfFortune"/>
+        <property name="emailAddress" value="${foo.email}"/>
+        <property name="team" value="${foo.team}"/>
+    </bean>
+
+
+</beans>
+
+
+
+
+
